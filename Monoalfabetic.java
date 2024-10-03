@@ -5,7 +5,7 @@ import java.util.List;
 public class Monoalfabetic {
  
   private static String ALPHABET = "AÁÀBCÇDEÉÈFGHIÍÏJKLMNÑOÓÒPQRSTUÚÜVWXYZ";
-  private static String MONO_ALPH = new String(permutaAlfabet(ALPHABET));
+  private static String MONO_ALPH = permutaAlfabet(ALPHABET);
 
   public static String permutaAlfabet (String reference) {
 
@@ -18,57 +18,13 @@ public class Monoalfabetic {
   }
 
   public static String xifraMonoAlfa (String input) {
-    if (input == null || input.isBlank()) return "";
-    StringBuilder result = new StringBuilder();
-
-    for (char c: input.toCharArray()) {
-      if (ALPHABET.indexOf(Character.toUpperCase(c)) == -1) {
-        result.append(c);
-        continue; // ignora si no está en el abecedario
-      }
-
-      char mono; 
-      if (Character.isUpperCase(c)) {
-        int index = ALPHABET.indexOf(c);
-        mono = MONO_ALPH.charAt(index);
-      }
-      else {
-        int index = ALPHABET.toLowerCase().indexOf(c);
-        mono = Character.toLowerCase(MONO_ALPH.charAt(index));
-      }
-
-      result.append(mono);
-    }
-
-    return result.toString();
+    return translateWith(input, ALPHABET, MONO_ALPH);
   }
 
   public static String desxifraMonoAlfa (String input) {
-    if (input == null || input.isBlank()) return "";
-    StringBuilder result = new StringBuilder();
-
-    for (char c: input.toCharArray()) {
-      if (ALPHABET.indexOf(Character.toUpperCase(c)) == -1) {
-        result.append(c);
-        continue; // ignora si no está en el abecedario
-      }
-
-      char mono; 
-      if (Character.isUpperCase(c)) {
-        int index = MONO_ALPH.indexOf(c);
-        mono = ALPHABET.charAt(index);
-      }
-      else {
-        int index = MONO_ALPH.toLowerCase().indexOf(c);
-        mono = Character.toLowerCase(ALPHABET.charAt(index));
-      }
-
-      result.append(mono);
-    }
-
-    return result.toString();
-
+    return translateWith(input, MONO_ALPH, ALPHABET);
   }
+
 
   public static void main (String[] args) {
     if(args.length < 1) {
@@ -97,4 +53,32 @@ public class Monoalfabetic {
 
   }
 
+  public static String translateWith (String input, String base, String translation) {
+    if (input == null || input.isBlank()) return "";
+    StringBuilder result = new StringBuilder();
+  
+    for (char c: input.toCharArray()) {
+      if (base.indexOf(Character.toUpperCase(c)) == -1) {
+        result.append(c);
+        continue; // ignora si no está en el abecedario
+      }
+  
+      char mono; 
+      if (Character.isUpperCase(c)) {
+        int index = base.toUpperCase().indexOf(c); // Tiene referencia de la base
+        mono = Character.toUpperCase(translation.charAt(index)); // Optiene la equivalencia de la traduccion
+      }
+      else {
+        int index = base.toLowerCase().indexOf(c); // Hace lo mismo pero teniendo en cuenta como minusculas
+        mono = Character.toLowerCase(translation.charAt(index));
+      }
+  
+      result.append(mono);
+    }
+  
+    return result.toString();
+  }
+
 }
+
+
