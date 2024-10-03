@@ -5,26 +5,16 @@ import java.util.List;
 public class Monoalfabetic {
  
   private static String ALPHABET = "AÁÀBCÇDEÉÈFGHIÍÏJKLMNÑOÓÒPQRSTUÚÜVWXYZ";
-  private static String MONO_ALPH = new String(permutaAlfabet(ALPHABET.toCharArray()));
+  private static String MONO_ALPH = new String(permutaAlfabet(ALPHABET));
 
-  public static char[] permutaAlfabet (char[] reference) {
+  public static String permutaAlfabet (String reference) {
 
-    Character[] asChars = new Character[reference.length];
-    // transforma a Character
-    for (int i = 0; i < reference.length; i++) {
-      asChars[i] = reference[i];
-    }
+    String[] divided = reference.split("");
 
-    List<Character> asCollection = Arrays.asList(asChars);
+    List<String> asCollection = Arrays.asList(divided);
     Collections.shuffle(asCollection);
 
-    // transforma a char
-    char[] shuffledArray = new char[asCollection.size()];
-    for (int i = 0; i < asCollection.size(); i++) {
-      shuffledArray[i] = asCollection.get(i);
-    }
-    return shuffledArray;
-
+    return String.join("", asCollection);
   }
 
   public static String xifraMonoAlfa (String input) {
@@ -87,19 +77,23 @@ public class Monoalfabetic {
     }
 
 
-    System.out.println("INICIALIZANDO ALPHABETOS");
+    System.out.println("INICIALIZANDO ALFABETOS");
     System.out.println("REFE: "+ALPHABET);
     System.out.println("MONO: "+MONO_ALPH);
     System.out.println();
 
     String input = args[0];
-    System.out.println("Procesando input: "+ input);
+    System.out.printf("%-15s: %s%n", "Input", input);
 
     String cifrado = xifraMonoAlfa(input);
-    System.out.println("Cifrado: "+ cifrado);
+    System.out.printf("%-15s: %s%n", "Cifrado", cifrado);
     
     String descifrado = desxifraMonoAlfa(cifrado);
-    System.out.println("Descifrado: "+ descifrado);
+    System.out.printf("%-15s: %s%n%n", "Descifrado", descifrado);
+
+    System.out.printf(
+      "El descifrado ha sido %s%n", (descifrado.equals(input) ? "correcto" : "incorrecto")
+    );
 
   }
 
