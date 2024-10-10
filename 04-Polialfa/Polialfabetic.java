@@ -59,10 +59,10 @@ public class Polialfabetic {
         System.out.println("No has introducido un texto para procesar por agumentos: java Polialfabetic <texto>");
         return;
     }
-
+    String alphabet = new String(ALPHABET);
 
     System.out.println("INICIALIZANDO ALFABETOS");
-    System.out.println("REFE: "+ new String(ALPHABET));
+    System.out.println("REFE: "+ alphabet);
     System.out.println();
 
     String input = args[0];
@@ -75,9 +75,47 @@ public class Polialfabetic {
     System.out.printf("%-15s: %s%n%n", "Descifrado", descifrado);
 
     System.out.printf(
-      "El descifrado ha sido %s%n", (descifrado.equals(input) ? "correcto" : "incorrecto")
+      "El descifrado ha sido %s%n%n", (descifrado.equals(input) ? "correcto" : "incorrecto")
     );
 
+    System.out.println("PRUEBAS EXTRAS");
+    System.out.println("Prueba de indice\n");
+    input = alphabet;
+    System.out.printf("%-15s: %s%n", "Input", input);
+
+    cifrado = xifraMonoAlfa(input);
+    System.out.printf("%-15s: %s%n", "Cifrado", cifrado);
+    
+    descifrado = desxifraMonoAlfa(cifrado);
+    System.out.printf("%-15s: %s%n%n", "Descifrado", descifrado);
+
+    System.out.printf(
+      "El descifrado ha sido %s%n%n", (descifrado.equals(input) ? "correcto" : "incorrecto")
+    );
+
+    System.out.println("Prueba de polialfabetos\n");
+    input = "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ";
+    System.out.printf("%-15s: %s%n", "Input", input);
+
+    cifrado = xifraMonoAlfa(input);
+    System.out.printf("%-15s: %s%n", "Cifrado", cifrado);
+    
+    descifrado = desxifraMonoAlfa(cifrado);
+    System.out.printf("%-15s: %s%n%n", "Descifrado", descifrado);
+    System.out.printf(
+      "El descifrado ha sido %s%n%n", (descifrado.equals(input) ? "correcto" : "incorrecto")
+    );
+
+    boolean allTheSame = true;
+    for (int i = 1; i <cifrado.length(); i++) {
+      allTheSame = allTheSame && (cifrado.charAt(i) == cifrado.charAt(i-1));
+      if (!allTheSame) break;
+    }
+
+    if (allTheSame)
+      System.out.println("WARNING: Es muy imposible que todos en todos los alfabetos Z sea la misma");
+    else 
+      System.out.println("Sistema polialfabetico correcto :D");
   }
 
   public static char translateWith (char letter, char[] base, char[] translation) {
