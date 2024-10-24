@@ -18,9 +18,9 @@ public class AES {
     byte[] toEncrypt = msg.getBytes();
     
     // Genera IvParameterSpec
-    byte[] iv = new byte[MIDA_IV];
-    initIV(iv);
-    IvParameterSpec ivParam = new IvParameterSpec(iv);
+    byte[] iv = new byte[MIDA_IV]; // Inicializa espacio para el IV
+    initIV(iv); // Introduce numeros random al IV (muta)
+    IvParameterSpec ivParam = new IvParameterSpec(iv); // Transforma el IV en una objeto/interfaz válida
 
     // Genera hash
     SecretKeySpec clauXifrada = convertSecretKey(clau);
