@@ -55,7 +55,7 @@ public class Hashes {
           for (int i3 = 0; i3 < length; i3++) {
             for (int i4 = 0; i4 < length; i4++) {
               for (int i5 = 0; i5 < length; i5++) {
-                String passwordStr = new String(password);
+                String passwordStr = new String(password).trim();
                 if (testPassword(passwordStr, salt, alg).equals(hash)) {
                   return passwordStr;
                 }
@@ -86,9 +86,9 @@ public class Hashes {
   public String testPassword(String password, String salt, String alg) {
     npass++;
     switch (alg) {
-      case ALGO_SHA: return getSHA512AmbSalt(password, salt);
+      case ALGO_SHA: return getSHA512AmbSalt(password, salt); 
     
-      case ALGO_PBKDF2_NAME: return getPBKDF2AmbSalt(password, salt);
+      case ALGO_PBKDF2_NAME: return getPBKDF2AmbSalt(password, salt); 
 
       default: throw new RuntimeException("Algoritmo no soportado");
     }
