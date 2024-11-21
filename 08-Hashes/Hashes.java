@@ -15,7 +15,7 @@ public class Hashes {
   public int npass = 0;
 
   public String getPBKDF2AmbSalt(String pw, String salt) {
-    int iterations = 10;
+    int iterations = 65000;
     int length = 128;
     PBEKeySpec spec = new PBEKeySpec(pw.toCharArray(), salt.getBytes(), iterations, length);
     byte[] hash = null;
@@ -34,7 +34,8 @@ public class Hashes {
     byte[] hash = null;
     try {
         sha = MessageDigest.getInstance(ALGO_SHA);
-        hash = sha.digest(pw.concat(salt).getBytes());
+        sha.update(salt.getBytes());
+        hash = sha.digest(pw.getBytes());
     } catch (NoSuchAlgorithmException e) {
         System.err.println(e);
     }
