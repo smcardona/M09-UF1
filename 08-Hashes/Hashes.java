@@ -12,6 +12,8 @@ public class Hashes {
   private static final String ALGO_PBKDF2 = "PBKDF2WithHmacSHA1";
   private static final String ALGO_PBKDF2_NAME = "PBKDF2";
 
+  private final char[] CHARSET = "abcdefABCDEF1234567890!".toCharArray();
+
   public int npass = 0;
 
   public String getPBKDF2AmbSalt(String pw, String salt) {
@@ -44,42 +46,17 @@ public class Hashes {
   }
 
   public String forcaBruta(String alg, String hash, String salt) {
-    final char[] CHARSET = "abcdefABCDEF1234567890!".toCharArray();
-    char[] password = new char[6];
-    
+
     npass = 0;
-    int length = CHARSET.length;
+    int maxLength = 6;
 
-    for (int i0 = 0; i0 < length; i0++) {
-      for (int i1 = 0; i1 < length; i1++) {
-        for (int i2 = 0; i2 < length; i2++) {
-          for (int i3 = 0; i3 < length; i3++) {
-            for (int i4 = 0; i4 < length; i4++) {
-              for (int i5 = 0; i5 < length; i5++) {
-                String passwordStr = new String(password).trim();
-                if (testPassword(passwordStr, salt, alg).equals(hash)) {
-                  return passwordStr;
-                }
-                // modifica indice 5
-                password[5] = CHARSET[i5];
-              }
-              // modifica indice 4
-              password[4] = CHARSET[i4];
-            }
-            // modifica indice 3
-            password[3] = CHARSET[i3];
-          }
-          // modifica indice 2
-          password[2] = CHARSET[i2];
-        }
-        // modifica indice 1
-        password[1] = CHARSET[i1];
-      }
-      // modifica indice 0
-      password[0] = CHARSET[i0];
-    }
+    // Prueba las combinaciones por longitudes fijas, decrecientes
+    for (int size = maxLength; size >= 1; size--) {
+      char[] password = new char[size];
 
-
+      String pass = fixedLengthPasswordTest(password, salt, hash, alg);
+      if (pass != null) return pass;
+  }
 
     return null;
   }
@@ -93,6 +70,49 @@ public class Hashes {
 
       default: throw new RuntimeException("Algoritmo no soportado");
     }
+  }
+
+  private String fixedLengthPasswordTest(char[] password, String salt, String hash, String alg) {
+    
+    int charsetLength = CHARSET.length;
+    
+    int size = password.length;
+
+    // Crear bucles anidados dinámicamente según la longitud del password
+    int[] indices = new int[size];
+
+    while (true) {
+
+      // Construir la contraseña actual dependiendo de los valores de los indices
+      for (int i = 0; i < size; i++) {
+        password[i] = CHARSET[indices[i]];
+      }
+
+      // Prueba la contraseña
+      String passwordStr = new String(password).trim();
+      if (testPassword(passwordStr, salt, alg).equals(hash)) {
+        return passwordStr;
+      }
+
+      
+      // Incrementar los índices de derecha a izquierda si el indice es el ultimo de la cadena 
+      int position = size - 1;
+      while (position >= 0) {
+        indices[position]++;
+        if (indices[position] < charsetLength) {
+          break;
+        }
+        indices[position] = 0;
+        position--;
+      }
+
+      // Si el índice más a la izquierda desbordó, termina
+      if (position < 0) {
+        break;
+      }
+    }
+
+    return null;
   }
 
   public String getInterval(long t1, long t2) {
